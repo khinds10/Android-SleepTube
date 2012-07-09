@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100px"
+        android:background="@drawable/background_title"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/textViewWelcome"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:drawableLeft="@drawable/ic_computer"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="@string/app_title"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mainLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:background="#000000"
+        android:orientation="vertical"
+        android:padding="50dp" >
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/bottom_border"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/OnOffText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/on_off" />
+
+        <ImageButton
+            android:id="@+id/onOffButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="18dp"
+            android:contentDescription="@string/app_name"
+            android:padding="0dp"
+            android:src="@drawable/off" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/changeChannel" />
+
+        <ImageButton
+            android:id="@+id/channelChanger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@string/app_name"
+            android:padding="0dp"
+            android:src="@drawable/channel0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/currentChannel"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/channel2"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/chooseChannelsButton"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:background="@drawable/custom_button"
+            android:text="Choose from Channels"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/currentChannel1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_summary"
+            android:paddingTop="15dp"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+</LinearLayout>

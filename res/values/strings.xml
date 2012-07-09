@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sleep Tube</string>    
+    <string name="app_title">Sleep Tube</string>
+    <string name="app_summary">Tune in to sleep soundly&#8230;</string>
+    <string name="on_off">On/Off</string>
+    <string name="changeChannel">Channel</string>
+    <string name="channel2">Ch. 2</string>    
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_sleep_tube">Sleep Tube</string>
+
+</resources>
