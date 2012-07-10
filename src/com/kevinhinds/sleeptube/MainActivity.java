@@ -51,31 +51,27 @@ public class MainActivity extends Activity {
 				showChannelsDialog();
 			}
 		});
-
 	}
-
+	
 	/**
 	 * basic collection of objects that pertains to what channel has what images
 	 * and sounds as well as what channel "number" it will be for the TV
 	 */
 	protected void setupChannels() {
-		myChannels = new Channel[15];
-		totalChannels = 15;
-		myChannels[0] = new Channel(2, R.raw.white, R.drawable.white, "");
-		myChannels[1] = new Channel(3, R.raw.rain, R.drawable.rain, "Rain");
-		myChannels[2] = new Channel(4, R.raw.river, R.drawable.river, "River");
-		myChannels[3] = new Channel(5, R.raw.white, R.drawable.white, "");
-		myChannels[4] = new Channel(6, R.raw.waterfall, R.drawable.waterfall, "Waterfall");
-		myChannels[5] = new Channel(7, R.raw.white, R.drawable.white, "");
-		myChannels[6] = new Channel(8, R.raw.waves, R.drawable.waves, "Waves");
-		myChannels[7] = new Channel(9, R.raw.white, R.drawable.white, "");
-		myChannels[8] = new Channel(10, R.raw.forest, R.drawable.forest, "Forest");
-		myChannels[9] = new Channel(11, R.raw.white, R.drawable.white, "");
-		myChannels[10] = new Channel(12, R.raw.wind, R.drawable.wind, "Wind");
+		myChannels = new Channel[12];
+		totalChannels = 12;
+		myChannels[0] = new Channel(2, R.raw.white, R.drawable.white, "White Noise");
+		myChannels[1] = new Channel(3, R.raw.waterfall, R.drawable.waterfall, "Waterfall");
+		myChannels[2] = new Channel(4, R.raw.rain, R.drawable.rain, "Rain");
+		myChannels[3] = new Channel(5, R.raw.river, R.drawable.river, "River");
+		myChannels[4] = new Channel(6, R.raw.waves, R.drawable.waves, "Waves");
+		myChannels[5] = new Channel(7, R.raw.pink, R.drawable.pink, "Pink Noise");
+		myChannels[6] = new Channel(8, R.raw.forest, R.drawable.forest, "Forest");
+		myChannels[7] = new Channel(9, R.raw.wind, R.drawable.wind, "Wind");
+		myChannels[8] = new Channel(10, R.raw.sunset, R.drawable.sunset, "Sunset");
+		myChannels[9] = new Channel(11, R.raw.beach, R.drawable.beach, "Beach");
+		myChannels[10] = new Channel(12, R.raw.brown, R.drawable.brown, "Brown Noise");
 		myChannels[11] = new Channel(13, R.raw.night, R.drawable.night, "Night");
-		myChannels[12] = new Channel(14, R.raw.beach, R.drawable.beach, "Beach");
-		myChannels[13] = new Channel(15, R.raw.white, R.drawable.white, "");
-		myChannels[14] = new Channel(16, R.raw.sunset, R.drawable.sunset, "Sunset");
 	}
 
 	/**

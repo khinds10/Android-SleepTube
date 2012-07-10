@@ -11,7 +11,7 @@ public class Channel {
 	public int sound;
 	public int image;
 	public String channelName;
-
+	
 	/**
 	 * construct Channel
 	 */

@@ -9,5 +9,6 @@
     <string name="channel2">Ch. 2</string>    
     <string name="menu_settings">Settings</string>
     <string name="title_activity_sleep_tube">Sleep Tube</string>
+    <string name="choose_channels">Choose from Channels</string>
 
 </resources>
