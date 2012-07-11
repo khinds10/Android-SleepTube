@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,7 +26,7 @@ public class MainActivity extends Activity {
 	private boolean tvOn;
 	private int currentChannel;
 	private int totalChannels;
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	
+
 	/**
 	 * basic collection of objects that pertains to what channel has what images
 	 * and sounds as well as what channel "number" it will be for the TV
@@ -125,6 +126,25 @@ public class MainActivity extends Activity {
 	 * @param on
 	 */
 	private void turnOnTV(boolean on) {
+
+		/** get screen metrics */
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int height = displaymetrics.heightPixels;
+		int width = displaymetrics.widthPixels;
+
+		/** adjust the TV cropped image WxH */
+		float tvCroppedWidthFloat = (float) (width * .65);
+		float tvCroppedHeightFloat = (float) (height * .30);
+		int tvCroppedWidth = (int) tvCroppedWidthFloat;
+		int tvCroppedHeight = (int) tvCroppedHeightFloat;
+
+		/** adjust the TV cropped image WxH */
+		float gifWidthFloat = (float) (width * .50);
+		float gifHeightFloat = (float) (height * .30);
+		int gifWidth = (int) gifWidthFloat;
+		int gifHeight = (int) gifHeightFloat;
+
 		/**
 		 * get the relative view to create the animated GIF behind the TV
 		 * outline
@@ -132,15 +152,16 @@ public class MainActivity extends Activity {
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.mainLayout2);
 		int id = getResources().getIdentifier("tv_cropped", "drawable", getPackageName());
 		ImageView imageView = new ImageView(this);
-		RelativeLayout.LayoutParams lphw_tv = new RelativeLayout.LayoutParams(295, 200);
+		RelativeLayout.LayoutParams lphw_tv = new RelativeLayout.LayoutParams(tvCroppedWidth, tvCroppedHeight);
 		imageView.setImageResource(id);
-		imageView.setPadding(0, 15, 0, 0);
+		imageView.setPadding(0, 0, 0, 0);
 		imageView.setLayoutParams(lphw_tv);
 
 		/** remove any existing views currently displaying as the TV image */
 		try {
 			rl.removeAllViews();
 		} catch (Exception e) {
+			
 		}
 
 		/**
@@ -156,7 +177,7 @@ public class MainActivity extends Activity {
 			InputStream stream = null;
 			stream = getResources().openRawResource(myChannels[currentChannel].image);
 			GifDecoderView staticView = new GifDecoderView(this, stream);
-			RelativeLayout.LayoutParams lhw = new RelativeLayout.LayoutParams(225, 225);
+			RelativeLayout.LayoutParams lhw = new RelativeLayout.LayoutParams(gifWidth, gifHeight);
 			staticView.setLayoutParams(lhw);
 			staticView.setPadding(10, 0, 0, 0);
 			rl.addView(staticView);
