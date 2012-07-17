@@ -9,6 +9,7 @@ import com.kevinhinds.sleeptube.Channel;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -26,7 +27,7 @@ public class MainActivity extends Activity {
 	private boolean tvOn;
 	private int currentChannel;
 	private int totalChannels;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,11 +53,13 @@ public class MainActivity extends Activity {
 				showChannelsDialog();
 			}
 		});
+		
+		/** apply custom fonts to all textViews */
+		applyFonts();
 	}
 
 	/**
-	 * basic collection of objects that pertains to what channel has what images
-	 * and sounds as well as what channel "number" it will be for the TV
+	 * basic collection of objects that pertains to what channel has what images and sounds as well as what channel "number" it will be for the TV
 	 */
 	protected void setupChannels() {
 		myChannels = new Channel[12];
@@ -146,8 +149,7 @@ public class MainActivity extends Activity {
 		int gifHeight = (int) gifHeightFloat;
 
 		/**
-		 * get the relative view to create the animated GIF behind the TV
-		 * outline
+		 * get the relative view to create the animated GIF behind the TV outline
 		 */
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.mainLayout2);
 		int id = getResources().getIdentifier("tv_cropped", "drawable", getPackageName());
@@ -161,18 +163,16 @@ public class MainActivity extends Activity {
 		try {
 			rl.removeAllViews();
 		} catch (Exception e) {
-			
+
 		}
 
 		/**
-		 * if we're turning the TV on, then add the animated GIF behind the TV
-		 * frame, else just add the TV image by itself
+		 * if we're turning the TV on, then add the animated GIF behind the TV frame, else just add the TV image by itself
 		 */
 		if (on) {
 
 			/**
-			 * get the new animated GIF based on which channel we're on and add
-			 * it to the relative layout
+			 * get the new animated GIF based on which channel we're on and add it to the relative layout
 			 */
 			InputStream stream = null;
 			stream = getResources().openRawResource(myChannels[currentChannel].image);
@@ -184,8 +184,7 @@ public class MainActivity extends Activity {
 			rl.addView(imageView);
 
 			/**
-			 * cleanup any garbage collection here, the GIFs cause the
-			 * application thread to run out of memory
+			 * cleanup any garbage collection here, the GIFs cause the application thread to run out of memory
 			 */
 			staticView = null;
 			System.gc();
@@ -204,8 +203,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * stop sound and setup the new instance of the next sound to be played /
-	 * the TV is now flagged as 'off'
+	 * stop sound and setup the new instance of the next sound to be played / the TV is now flagged as 'off'
 	 */
 	private void stopSound() {
 		tvOn = false;
@@ -214,8 +212,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * setup the new soundmanager with the context being "this" and the sound
-	 * being the currently mapped sound per the currently selected channel
+	 * setup the new soundmanager with the context being "this" and the sound being the currently mapped sound per the currently selected channel
 	 */
 	private void setupSound() {
 		mSoundManager = new SoundManager();
@@ -260,21 +257,40 @@ public class MainActivity extends Activity {
 		onOffButton.setImageResource(getResources().getIdentifier("on", "drawable", getPackageName()));
 
 		/**
-		 * the channel changer button must change because the user changed the
-		 * channel
+		 * the channel changer button must change because the user changed the channel
 		 */
 		ImageButton channelChangerButton = (ImageButton) findViewById(R.id.channelChanger);
 		int currentChannelImage = currentChannel;
 		channelChangerButton.setImageResource(getResources().getIdentifier("channel" + Integer.toString(currentChannelImage), "drawable", getPackageName()));
 
 		/**
-		 * stop any existing sound, turn the TV on play the new sound and update
-		 * the channel textView about the channel change
+		 * stop any existing sound, turn the TV on play the new sound and update the channel textView about the channel change
 		 */
 		stopSound();
 		turnOnTV(true);
 		playSound();
 		updateChannelMessage();
+	}
+
+	/**
+	 * apply custom fonts to the textView elements of the application
+	 */
+	private void applyFonts() {
+		applyTextViewFont(R.id.textViewWelcome);
+		applyTextViewFont(R.id.OnOffText);
+		applyTextViewFont(R.id.changeChannelText);
+		applyTextViewFont(R.id.currentChannel);
+		applyTextViewFont(R.id.sleepSoundly);
+	}
+	
+	/**
+	 * apply textview font
+	 * @param id
+	 */
+	private void applyTextViewFont(int id) {
+		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Waree-Bold.ttf");
+		TextView tv = (TextView) findViewById(id);
+		tv.setTypeface(tf);
 	}
 
 	@Override
