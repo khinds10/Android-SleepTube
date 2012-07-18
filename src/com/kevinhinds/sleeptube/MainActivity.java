@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,8 @@ public class MainActivity extends Activity {
 	private boolean tvOn;
 	private int currentChannel;
 	private int totalChannels;
+	private int timerLengthSelection;
+	private CountDownTimer countDownTimer = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -53,7 +56,14 @@ public class MainActivity extends Activity {
 				showChannelsDialog();
 			}
 		});
-		
+
+		TextView timerButton = (TextView) findViewById(R.id.timerButton);
+		timerButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				showTimerDialog();
+			}
+		});
+
 		/** apply custom fonts to all textViews */
 		applyFonts();
 	}
@@ -221,6 +231,116 @@ public class MainActivity extends Activity {
 	}
 
 	/**
+	 * show choose timer length dialog
+	 */
+	private void showTimerDialog() {
+
+		final CharSequence[] timerLengths = new CharSequence[6];
+
+		timerLengths[0] = (CharSequence) "Cancel Timer";
+		for (int i = 1; i < 6; i++) {
+			String timerLengthValue = "";
+			String tempValue = "";
+			int timerLength = 1800 * i;
+			int hours = timerLength / 3600;
+			int minutes = (timerLength % 3600) / 60;
+			int seconds = timerLength % 60;
+
+			if (hours > 0) {
+				tempValue = Integer.toString(hours);
+				if (hours == 1) {
+					timerLengthValue = timerLengthValue + tempValue + " hr ";
+				} else {
+					timerLengthValue = timerLengthValue + tempValue + " hrs ";
+				}
+			}
+			if (minutes > 0) {
+				tempValue = Integer.toString(minutes);
+				timerLengthValue = timerLengthValue + tempValue + " min ";
+			}
+			if (seconds > 0) {
+				tempValue = Integer.toString(seconds);
+				timerLengthValue = timerLengthValue + tempValue + " sec ";
+			}
+
+			timerLengths[i] = (CharSequence) timerLengthValue;
+		}
+
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+		alt_bld.setIcon(R.drawable.ic_launcher);
+		alt_bld.setTitle("Select Timer Length");
+
+		alt_bld.setSingleChoiceItems(timerLengths, 0, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				dialog.dismiss();
+				if (item == 0) {
+					Toast.makeText(getBaseContext(), "Timer Cancelled", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(getBaseContext(), "Timer set for ( " + timerLengths[item] + ")", Toast.LENGTH_LONG).show();
+				}
+
+				startTimer(item);
+			}
+		});
+		alt_bld.show();
+	}
+
+	private void startTimer(int item) {
+
+		if (item == 0) {
+			if (countDownTimer != null) {
+				countDownTimer.cancel();
+				stopTimer();
+			}
+		}
+
+		ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
+		onOffButton.setImageResource(getResources().getIdentifier("on", "drawable", getPackageName()));
+		playSound();
+		turnOnTV(true);
+
+		int timerLength = 1800 * item * 1000;
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
+		countDownTimer = new CountDownTimer(timerLength, 1000) {
+
+			public void onTick(long millisUntilFinished) {
+
+				String timerLengthValue = "";
+				String tempValue = "";
+				int secUntilFinished = (int) millisUntilFinished / 1000;
+				int hours = secUntilFinished / 3600;
+				int minutes = (secUntilFinished % 3600) / 60;
+
+				if (hours > 0) {
+					tempValue = Integer.toString(hours);
+					timerLengthValue = timerLengthValue + tempValue + ":";
+				}
+				if (minutes > 0) {
+					tempValue = Integer.toString(minutes);
+					timerLengthValue = timerLengthValue + tempValue;
+				}
+				TextView timerButton = (TextView) findViewById(R.id.timerButton);
+				timerButton.setText(timerLengthValue);
+			}
+
+			public void onFinish() {
+				stopTimer();
+			}
+		}.start();
+	}
+
+	private void stopTimer() {
+		TextView timerButton = (TextView) findViewById(R.id.timerButton);
+		timerButton.setText("Timer");
+		ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
+		onOffButton.setImageResource(getResources().getIdentifier("off", "drawable", getPackageName()));
+		stopSound();
+		turnOnTV(false);
+	}
+
+	/**
 	 * show the dialog of current channels to choose from
 	 */
 	private void showChannelsDialog() {
@@ -281,10 +401,12 @@ public class MainActivity extends Activity {
 		applyTextViewFont(R.id.changeChannelText);
 		applyTextViewFont(R.id.currentChannel);
 		applyTextViewFont(R.id.sleepSoundly);
+		applyTextViewFont(R.id.timerButton);
 	}
-	
+
 	/**
 	 * apply textview font
+	 * 
 	 * @param id
 	 */
 	private void applyTextViewFont(int id) {

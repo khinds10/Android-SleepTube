@@ -10,19 +10,33 @@
         android:layout_width="fill_parent"
         android:layout_height="66dp"
         android:background="@drawable/background_title"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="10dp" >
 
         <TextView
             android:id="@+id/textViewWelcome"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:layout_weight="2"
             android:drawableLeft="@drawable/ic_computer"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:text="@string/app_title"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/timerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:maxWidth="75dp"
+            android:background="@null"
+            android:text="@string/timer"
+            android:drawableLeft="@drawable/timer"
+            android:drawablePadding="2dp"
+            android:padding="10dp" />
     </LinearLayout>
 
     <RelativeLayout
@@ -30,8 +44,8 @@
         android:id="@+id/mainLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="175dp"
         android:background="#000000"
+        android:minHeight="175dp"
         android:orientation="vertical"
         android:padding="50dp" >
     </RelativeLayout>
@@ -54,9 +68,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_marginTop="18dp"
+            android:background="@null"
             android:contentDescription="@string/app_name"
             android:padding="0dp"
-            android:background="@null"
             android:src="@drawable/off" />
 
         <TextView
@@ -105,8 +119,8 @@
             android:id="@+id/sleepSoundly"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_summary"
             android:paddingTop="15dp"
+            android:text="@string/app_summary"
             android:textSize="12dp" />
     </LinearLayout>
 
