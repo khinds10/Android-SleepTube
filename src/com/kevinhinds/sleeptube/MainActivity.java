@@ -28,7 +28,6 @@ public class MainActivity extends Activity {
 	private boolean tvOn;
 	private int currentChannel;
 	private int totalChannels;
-	private int timerLengthSelection;
 	private CountDownTimer countDownTimer = null;
 
 	/** Called when the activity is first created. */
@@ -200,6 +199,15 @@ public class MainActivity extends Activity {
 			System.gc();
 			Runtime.getRuntime().gc();
 		} else {
+			/** turn of the timer if we already have one running and the user turned off the TV */
+			if (countDownTimer != null) {
+				countDownTimer.cancel();
+				TextView timerButton = (TextView) findViewById(R.id.timerButton);
+				timerButton.setText("Timer");
+				ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
+				onOffButton.setImageResource(getResources().getIdentifier("off", "drawable", getPackageName()));
+				stopSound();
+			}
 			rl.addView(imageView);
 		}
 	}
@@ -228,116 +236,6 @@ public class MainActivity extends Activity {
 		mSoundManager = new SoundManager();
 		mSoundManager.initSounds(this);
 		mSoundManager.addSound(1, myChannels[currentChannel].sound);
-	}
-
-	/**
-	 * show choose timer length dialog
-	 */
-	private void showTimerDialog() {
-
-		final CharSequence[] timerLengths = new CharSequence[6];
-
-		timerLengths[0] = (CharSequence) "Cancel Timer";
-		for (int i = 1; i < 6; i++) {
-			String timerLengthValue = "";
-			String tempValue = "";
-			int timerLength = 1800 * i;
-			int hours = timerLength / 3600;
-			int minutes = (timerLength % 3600) / 60;
-			int seconds = timerLength % 60;
-
-			if (hours > 0) {
-				tempValue = Integer.toString(hours);
-				if (hours == 1) {
-					timerLengthValue = timerLengthValue + tempValue + " hr ";
-				} else {
-					timerLengthValue = timerLengthValue + tempValue + " hrs ";
-				}
-			}
-			if (minutes > 0) {
-				tempValue = Integer.toString(minutes);
-				timerLengthValue = timerLengthValue + tempValue + " min ";
-			}
-			if (seconds > 0) {
-				tempValue = Integer.toString(seconds);
-				timerLengthValue = timerLengthValue + tempValue + " sec ";
-			}
-
-			timerLengths[i] = (CharSequence) timerLengthValue;
-		}
-
-		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-		alt_bld.setIcon(R.drawable.ic_launcher);
-		alt_bld.setTitle("Select Timer Length");
-
-		alt_bld.setSingleChoiceItems(timerLengths, 0, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				dialog.dismiss();
-				if (item == 0) {
-					Toast.makeText(getBaseContext(), "Timer Cancelled", Toast.LENGTH_LONG).show();
-				} else {
-					Toast.makeText(getBaseContext(), "Timer set for ( " + timerLengths[item] + ")", Toast.LENGTH_LONG).show();
-				}
-
-				startTimer(item);
-			}
-		});
-		alt_bld.show();
-	}
-
-	private void startTimer(int item) {
-
-		if (item == 0) {
-			if (countDownTimer != null) {
-				countDownTimer.cancel();
-				stopTimer();
-			}
-		}
-
-		ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
-		onOffButton.setImageResource(getResources().getIdentifier("on", "drawable", getPackageName()));
-		playSound();
-		turnOnTV(true);
-
-		int timerLength = 1800 * item * 1000;
-		if (countDownTimer != null) {
-			countDownTimer.cancel();
-		}
-		countDownTimer = new CountDownTimer(timerLength, 1000) {
-
-			public void onTick(long millisUntilFinished) {
-
-				String timerLengthValue = "";
-				String tempValue = "";
-				int secUntilFinished = (int) millisUntilFinished / 1000;
-				int hours = secUntilFinished / 3600;
-				int minutes = (secUntilFinished % 3600) / 60;
-
-				if (hours > 0) {
-					tempValue = Integer.toString(hours);
-					timerLengthValue = timerLengthValue + tempValue + ":";
-				}
-				if (minutes > 0) {
-					tempValue = Integer.toString(minutes);
-					timerLengthValue = timerLengthValue + tempValue;
-				}
-				TextView timerButton = (TextView) findViewById(R.id.timerButton);
-				timerButton.setText(timerLengthValue);
-			}
-
-			public void onFinish() {
-				stopTimer();
-			}
-		}.start();
-	}
-
-	private void stopTimer() {
-		TextView timerButton = (TextView) findViewById(R.id.timerButton);
-		timerButton.setText("Timer");
-		ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
-		onOffButton.setImageResource(getResources().getIdentifier("off", "drawable", getPackageName()));
-		stopSound();
-		turnOnTV(false);
 	}
 
 	/**
@@ -422,5 +320,159 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		mSoundManager.stopSound(1);
+	}
+
+	/**
+	 * show choose timer length dialog
+	 */
+	private void showTimerDialog() {
+
+		final CharSequence[] timerLengths = new CharSequence[7];
+
+		timerLengths[0] = (CharSequence) "Cancel Timer";
+		for (int i = 1; i < 7; i++) {
+			int timerLength = 1800 * i;
+			timerLengths[i] = (CharSequence) parseTimerDialogTime(timerLength);
+		}
+
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+		alt_bld.setIcon(R.drawable.ic_launcher);
+		alt_bld.setTitle("Select Timer Length");
+
+		alt_bld.setSingleChoiceItems(timerLengths, 0, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				dialog.dismiss();
+				if (item == 0) {
+					Toast.makeText(getBaseContext(), "Timer Cancelled", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(getBaseContext(), "Timer set for ( " + timerLengths[item] + ")", Toast.LENGTH_LONG).show();
+				}
+
+				startTimer(item);
+			}
+		});
+		alt_bld.show();
+	}
+
+	/**
+	 * create a nice human readable time string based on the length of timer
+	 * 
+	 * @param timerLength
+	 *            number of seconds of the timer
+	 * @return human readable string of hours:minutes of the timer's length
+	 */
+	private String parseTimerDialogTime(int timerLength) {
+		String timerLengthValue = "";
+		String tempValue = "";
+		int hours = timerLength / 3600;
+		int minutes = (timerLength % 3600) / 60;
+		int seconds = timerLength % 60;
+
+		if (hours > 0) {
+			tempValue = Integer.toString(hours);
+			if (hours == 1) {
+				timerLengthValue = timerLengthValue + tempValue + " hr ";
+			} else {
+				timerLengthValue = timerLengthValue + tempValue + " hrs ";
+			}
+		}
+		if (minutes > 0) {
+			tempValue = Integer.toString(minutes);
+			timerLengthValue = timerLengthValue + tempValue + " min ";
+		}
+		if (seconds > 0) {
+			tempValue = Integer.toString(seconds);
+			timerLengthValue = timerLengthValue + tempValue + " sec ";
+		}
+		return timerLengthValue;
+	}
+
+	/**
+	 * start the timer based on the chosen item in the start timer dialog
+	 * 
+	 * @param item
+	 */
+	private void startTimer(int item) {
+
+		/**
+		 * if the user selected item = 0, then it's a request to cancel the timer, so stop it
+		 */
+		if (item == 0) {
+			if (countDownTimer != null) {
+				countDownTimer.cancel();
+				stopTimer();
+			}
+		}
+
+		/**
+		 * if the TV isn't on when they chose to start the time, then turn it on!
+		 */
+		if (!tvOn) {
+			ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
+			onOffButton.setImageResource(getResources().getIdentifier("on", "drawable", getPackageName()));
+			playSound();
+			turnOnTV(true);
+		}
+
+		/**
+		 * create a new instance of the Android Countdown timer if another timer is running, cancel it
+		 */
+		if (countDownTimer != null) {
+			countDownTimer.cancel();
+		}
+		int timeOutMilliseconds = 1800 * 1000 * item;
+		countDownTimer = new CountDownTimer(timeOutMilliseconds, 1000) {
+
+			/**
+			 * set the value of the timer time left each time the timer 'ticks' per second
+			 */
+			public void onTick(long millisUntilFinished) {
+				TextView timerButton = (TextView) findViewById(R.id.timerButton);
+				timerButton.setText(getHumanReadableTimeValue(millisUntilFinished));
+			}
+
+			/**
+			 * get a human readable time value to show to the user for how much time left
+			 * 
+			 * @param millisUntilFinished
+			 * @return human readable time left for the timer
+			 */
+			private String getHumanReadableTimeValue(long millisUntilFinished) {
+				String timerLengthValue = "";
+				String tempValue = "";
+				int secUntilFinished = (int) millisUntilFinished / 1000;
+				int hours = secUntilFinished / 3600;
+				int minutes = (secUntilFinished % 3600) / 60;
+
+				if (hours > 0) {
+					tempValue = Integer.toString(hours);
+					timerLengthValue = timerLengthValue + tempValue + ":";
+				}
+				if (minutes > 0) {
+					tempValue = Integer.toString(minutes);
+					timerLengthValue = timerLengthValue + tempValue;
+				}
+				return timerLengthValue;
+			}
+
+			/**
+			 * timer has finished on its own event
+			 */
+			public void onFinish() {
+				stopTimer();
+			}
+		}.start();
+	}
+
+	/**
+	 * stop timer, either based on user request or it actually finished
+	 */
+	private void stopTimer() {
+		TextView timerButton = (TextView) findViewById(R.id.timerButton);
+		timerButton.setText("Timer");
+		ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
+		onOffButton.setImageResource(getResources().getIdentifier("off", "drawable", getPackageName()));
+		stopSound();
+		turnOnTV(false);
 	}
 }
