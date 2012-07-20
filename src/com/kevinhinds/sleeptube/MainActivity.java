@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
 	 */
 	private void updateChannelMessage() {
 		TextView currentChannelTV = (TextView) findViewById(R.id.currentChannel);
-		currentChannelTV.setText((CharSequence) "Ch. " + Integer.toString(myChannels[currentChannel].number) + " " + myChannels[currentChannel].channelName);
+		currentChannelTV.setText((CharSequence) "Ch. " + Integer.toString(myChannels[currentChannel].number) + "  " + myChannels[currentChannel].channelName);
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class MainActivity extends Activity {
 	 * @param id
 	 */
 	private void applyTextViewFont(int id) {
-		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Waree-Bold.ttf");
+		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitaltech.otf");
 		TextView tv = (TextView) findViewById(id);
 		tv.setTypeface(tf);
 	}
