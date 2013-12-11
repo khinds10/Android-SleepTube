@@ -4,15 +4,20 @@ import java.io.InputStream;
 
 import com.kevinhinds.sleeptube.sound.SoundManager;
 import com.kevinhinds.sleeptube.views.GifDecoderView;
+import com.kevinhinds.sleeptube.marketplace.MarketPlace;
+import com.kevinhinds.sleeptube.updates.LatestUpdates;
 import com.kevinhinds.sleeptube.Channel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -62,6 +67,9 @@ public class MainActivity extends Activity {
 				showTimerDialog();
 			}
 		});
+
+		/** show the latest update notes if the application was just installed */
+		LatestUpdates.showFirstInstalledNotes(this);
 
 		/** apply custom fonts to all textViews */
 		applyFonts();
@@ -474,5 +482,53 @@ public class MainActivity extends Activity {
 		onOffButton.setImageResource(getResources().getIdentifier("off", "drawable", getPackageName()));
 		stopSound();
 		turnOnTV(false);
+	}
+	
+	/** handle user selecting a menu item */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_bitstreet:
+			viewAllPublisherApps();
+			break;
+		case R.id.menu_fullversion:
+			viewPremiumApp();
+			break;
+		}
+		return true;
+	}
+	
+	/** create the main menu based on if the app is the full version or not */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		String isFullVersion = getResources().getString(R.string.is_full_version);
+		if (isFullVersion.toLowerCase().equals("true")) {
+			getMenuInflater().inflate(R.menu.main_full, menu);
+		} else {
+			getMenuInflater().inflate(R.menu.main, menu);
+		}
+		return true;
+	}
+
+	/**
+	 * view all apps on the device marketplace for current publisher
+	 */
+	public void viewAllPublisherApps() {
+		MarketPlace marketPlace = new MarketPlace(this);
+		Intent intent = marketPlace.getViewAllPublisherAppsIntent(this);
+		if (intent != null) {
+			startActivity(intent);
+		}
+	}
+
+	/**
+	 * view the premium version of this app
+	 */
+	public void viewPremiumApp() {
+		MarketPlace marketPlace = new MarketPlace(this);
+		Intent intent = marketPlace.getViewPremiumAppIntent(this);
+		if (intent != null) {
+			startActivity(intent);
+		}
 	}
 }

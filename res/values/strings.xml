@@ -11,5 +11,15 @@
     <string name="title_activity_sleep_tube">Television White Noise</string>
     <string name="choose_channels">Choose from Channels</string>
     <string name="timer">Timer</string>
+    <string name="is_full_version">true</string>
+    <string name="app_full_version_package">com.kevinhinds.sleeptube</string>
+    <string name="device_nook_ean_number">9999999999999</string>
+    <string name="app_publisher_name">Kevin Hinds</string>
+    <string name="app_publisher_package">com.kevinhinds</string>
+    <string name="menu_bitstreet">Bitstreet Apps</string>
+    <string name="menu_fullversion">Get the Full Version!</string>
+    <string name="latest_update_notes"></string>
+    <string name="latest_update_example">Latest Updates\n\nItem #1\nItem #2\n\nThanks for downloading!</string>
+    <string name="marketplace_name"></string>
 
 </resources>
