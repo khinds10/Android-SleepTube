@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +36,7 @@ public class MainActivity extends Activity {
 	private int currentChannel;
 	private int totalChannels;
 	private CountDownTimer countDownTimer = null;
+	private float degreesFrom = 0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -79,20 +82,37 @@ public class MainActivity extends Activity {
 	 * basic collection of objects that pertains to what channel has what images and sounds as well as what channel "number" it will be for the TV
 	 */
 	protected void setupChannels() {
-		myChannels = new Channel[12];
-		totalChannels = 12;
-		myChannels[0] = new Channel(2, R.raw.white, R.drawable.white, "White Noise");
-		myChannels[1] = new Channel(3, R.raw.waterfall, R.drawable.waterfall, "Waterfall");
-		myChannels[2] = new Channel(4, R.raw.rain, R.drawable.rain, "Rain");
-		myChannels[3] = new Channel(5, R.raw.river, R.drawable.river, "River");
-		myChannels[4] = new Channel(6, R.raw.waves, R.drawable.waves, "Waves");
-		myChannels[5] = new Channel(7, R.raw.pink, R.drawable.pink, "Pink Noise");
-		myChannels[6] = new Channel(8, R.raw.forest, R.drawable.forest, "Forest");
-		myChannels[7] = new Channel(9, R.raw.wind, R.drawable.wind, "Wind");
-		myChannels[8] = new Channel(10, R.raw.sunset, R.drawable.sunset, "Sunset");
-		myChannels[9] = new Channel(11, R.raw.beach, R.drawable.beach, "Beach");
-		myChannels[10] = new Channel(12, R.raw.brown, R.drawable.brown, "Brown Noise");
-		myChannels[11] = new Channel(13, R.raw.night, R.drawable.night, "Night");
+		myChannels = new Channel[29];
+		totalChannels = 29;
+		myChannels[0] = new Channel(2, R.raw.white, R.drawable.beach, "Beach");
+		myChannels[1] = new Channel(3, R.raw.white, R.drawable.boat, "Boat");
+		myChannels[2] = new Channel(4, R.raw.white, R.drawable.brown, "Brown");
+		myChannels[3] = new Channel(5, R.raw.white, R.drawable.fire, "Fire");
+		myChannels[4] = new Channel(6, R.raw.white, R.drawable.fireflies, "Fireflies");
+		myChannels[5] = new Channel(7, R.raw.white, R.drawable.flame, "Flame");
+		myChannels[6] = new Channel(10, R.raw.white, R.drawable.forest_rain, "Forest");
+		myChannels[7] = new Channel(11, R.raw.white, R.drawable.highway, "Highway");
+		myChannels[8] = new Channel(12, R.raw.white, R.drawable.house, "House");
+		myChannels[9] = new Channel(14, R.raw.white, R.drawable.lake, "Lake");
+		myChannels[10] = new Channel(17, R.raw.white, R.drawable.lights, "Lights");
+		myChannels[11] = new Channel(21, R.raw.white, R.drawable.moon_clouds, "Moon");
+		myChannels[12] = new Channel(22, R.raw.white, R.drawable.mountain, "Mountain");
+		myChannels[13] = new Channel(23, R.raw.white, R.drawable.night, "Night");
+		myChannels[14] = new Channel(24, R.raw.white, R.drawable.night_sky, "Sky");
+		myChannels[15] = new Channel(27, R.raw.white, R.drawable.northern, "Northern");
+		myChannels[16] = new Channel(30, R.raw.white, R.drawable.pink, "Pink");
+		myChannels[17] = new Channel(31, R.raw.white, R.drawable.rain, "Rain");
+		myChannels[18] = new Channel(32, R.raw.white, R.drawable.relax, "Relax");
+		myChannels[19] = new Channel(33, R.raw.white, R.drawable.river, "River");
+		myChannels[20] = new Channel(35, R.raw.white, R.drawable.snow_dust, "Snow");
+		myChannels[21] = new Channel(36, R.raw.white, R.drawable.stars, "Stars");
+		myChannels[22] = new Channel(38, R.raw.white, R.drawable.sunset, "Sunset");
+		myChannels[23] = new Channel(44, R.raw.white, R.drawable.venice, "Venice");
+		myChannels[24] = new Channel(46, R.raw.white, R.drawable.water, "Water");
+		myChannels[25] = new Channel(48, R.raw.white, R.drawable.waterfall, "Waterfall");
+		myChannels[26] = new Channel(49, R.raw.white, R.drawable.waves, "Waves");
+		myChannels[27] = new Channel(50, R.raw.white, R.drawable.white, "White");
+		myChannels[28] = new Channel(55, R.raw.white, R.drawable.wind, "Wind");
 	}
 
 	/**
@@ -281,14 +301,21 @@ public class MainActivity extends Activity {
 		 */
 		ImageButton onOffButton = (ImageButton) findViewById(R.id.onOffButton);
 		onOffButton.setImageResource(getResources().getIdentifier("on", "drawable", getPackageName()));
-
+		
 		/**
 		 * the channel changer button must change because the user changed the channel
 		 */
-		ImageButton channelChangerButton = (ImageButton) findViewById(R.id.channelChanger);
-		int currentChannelImage = currentChannel;
-		channelChangerButton.setImageResource(getResources().getIdentifier("channel" + Integer.toString(currentChannelImage), "drawable", getPackageName()));
-
+		degreesFrom = degreesFrom % 360;
+		float degreesTo = degreesFrom + (int) (360 / totalChannels);
+		
+		/** rotate the dial to the number of minutes via RotateAnimation */
+		ImageButton timerDial = (ImageButton) findViewById(R.id.channelChanger);
+		RotateAnimation rAnim = new RotateAnimation(degreesFrom, degreesTo, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+		rAnim.setFillAfter(true);
+		rAnim.setDuration(50);
+		timerDial.startAnimation(rAnim);
+		degreesFrom = degreesTo;
+	
 		/**
 		 * stop any existing sound, turn the TV on play the new sound and update the channel textView about the channel change
 		 */
@@ -483,7 +510,7 @@ public class MainActivity extends Activity {
 		stopSound();
 		turnOnTV(false);
 	}
-	
+
 	/** handle user selecting a menu item */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -497,7 +524,7 @@ public class MainActivity extends Activity {
 		}
 		return true;
 	}
-	
+
 	/** create the main menu based on if the app is the full version or not */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
