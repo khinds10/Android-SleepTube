@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
 	protected void setupChannels() {
 		myChannels = new Channel[29];
 		totalChannels = 29;
-		myChannels[0] = new Channel(2, R.raw.white, R.drawable.white, "White");		
+		myChannels[0] = new Channel(2, R.raw.white, R.drawable.white, "White");
 		myChannels[1] = new Channel(3, R.raw.waterfall, R.drawable.waterfall, "Waterfall");
 		myChannels[2] = new Channel(5, R.raw.rain, R.drawable.rain, "Rain");
 		myChannels[3] = new Channel(7, R.raw.beach, R.drawable.beach, "Beach");
