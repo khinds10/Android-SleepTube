@@ -18,7 +18,7 @@
     <string name="app_publisher_package">com.kevinhinds</string>
     <string name="menu_bitstreet">Bitstreet Apps</string>
     <string name="menu_fullversion">Get the Full Version!</string>
-    <string name="latest_update_notes"></string>
+    <string name="latest_update_notes">Thanks for Downloading!</string>
     <string name="latest_update_example">Latest Updates\n\nItem #1\nItem #2\n\nThanks for downloading!</string>
     <string name="marketplace_name"></string>
 
