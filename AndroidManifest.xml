@@ -1,11 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kevinhinds.sleeptube"
-    android:versionCode="4"
-    android:versionName="2.0" >
+    android:versionCode="5"
+    android:versionName="2.5" >
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="7" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+        
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Appjolt Permissions -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -21,6 +30,41 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Appjolt -->
+        <!-- Note: For optimal OS version compatibility, please do not change any attributes -->
+
+        <!-- Appjolt Activity -->
+        <activity
+            android:name="com.appjolt.winback.AppjoltActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="false"
+            android:taskAffinity="com.appjolt.winback.twentyeight"
+            android:theme="@android:style/Theme.Panel" />
+
+        <!-- Appjolt Service -->
+        <service
+            android:name="com.appjolt.winback.WinbackService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":appjolt" />
+
+        <!-- Appjolt BOOT receiver -->
+        <receiver
+            android:name="com.appjolt.winback.WinbackBootReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>

@@ -1,6 +1,10 @@
 package com.kevinhinds.sleeptube;
 
 import java.io.InputStream;
+import com.pollfish.main.PollFish;
+import com.pollfish.constants.Position;
+import com.google.android.gms.ads.*;
+import com.appjolt.winback.Winback;
 
 import com.kevinhinds.sleeptube.sound.SoundManager;
 import com.kevinhinds.sleeptube.views.GifDecoderView;
@@ -11,6 +15,7 @@ import com.kevinhinds.sleeptube.Channel;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -40,6 +45,26 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		/** Appjolt - Init SDK if it's Enabled */
+		if (Boolean.parseBoolean(getResources().getString(R.string.appjolt_enabled))) {
+			Winback.init(this);
+		}
+
+		/** Look up the AdView as a resource and load a request */
+		if (Boolean.parseBoolean(getResources().getString(R.string.admob_enabled))) {
+
+			/** setup the adMob Ad */
+			AdView adView = new AdView(this);
+			adView.setAdUnitId(getResources().getString(R.string.admob_ads_id));
+			adView.setAdSize(AdSize.BANNER);
+
+			/** apply it to the bottom of the screen */
+			RelativeLayout layout = (RelativeLayout) findViewById(R.id.adViewContainer);
+			layout.addView(adView);
+			AdRequest adRequest = new AdRequest.Builder().build();
+			adView.loadAd(adRequest);
+		}
 
 		/** get application context and setup the initial channels */
 		setupChannels();
@@ -75,6 +100,31 @@ public class MainActivity extends Activity {
 		applyFonts();
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (Boolean.parseBoolean(getResources().getString(R.string.pollfish_enabled))) {
+			PollFish.init(this, getString(R.string.pollfish_api_key), Position.BOTTOM_RIGHT, 100);
+		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if (Boolean.parseBoolean(getResources().getString(R.string.pollfish_enabled))) {
+			PollFish.init(this, getString(R.string.pollfish_api_key), Position.BOTTOM_RIGHT, 100);
+		}
+	}
+	
+	/** make parts of the menu invisible based on settings */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		menu.findItem(R.id.menu_fullversion).setVisible(!Boolean.parseBoolean(getResources().getString(R.string.is_full_version)));
+		menu.findItem(R.id.menu_suggested).setVisible(Boolean.parseBoolean(getResources().getString(R.string.has_suggested_app)));
+		return true;
+	}
+	
 	/**
 	 * basic collection of objects that pertains to what channel has what images and sounds as well as what channel "number" it will be for the TV
 	 */
@@ -509,24 +559,22 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_bitstreet:
-			viewAllPublisherApps();
+			MarketPlace.viewAllPublisherApps(this);
 			break;
 		case R.id.menu_fullversion:
-			viewPremiumApp();
+			MarketPlace.viewPremiumApp(this);
+			break;
+		case R.id.menu_suggested:
+			MarketPlace.viewSuggestedApp(this);
 			break;
 		}
 		return true;
 	}
-
+	
 	/** create the main menu based on if the app is the full version or not */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		String isFullVersion = getResources().getString(R.string.is_full_version);
-		if (isFullVersion.toLowerCase().equals("true")) {
-			getMenuInflater().inflate(R.menu.main_full, menu);
-		} else {
-			getMenuInflater().inflate(R.menu.main, menu);
-		}
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
